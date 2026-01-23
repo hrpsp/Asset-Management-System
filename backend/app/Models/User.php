@@ -2,47 +2,86 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
     protected $fillable = [
         'name',
         'email',
         'password',
+        'role',
+        'is_active',
+        'last_login_at',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
-    protected function casts(): array
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'password' => 'hashed',
+        'is_active' => 'boolean',
+        'last_login_at' => 'datetime',
+    ];
+
+    // Relationships
+    public function activityLogs(): HasMany
     {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
+        return $this->hasMany(ActivityLog::class);
+    }
+
+    public function allocationsCreated(): HasMany
+    {
+        return $this->hasMany(Allocation::class, 'created_by');
+    }
+
+    public function assignedTransfers(): HasMany
+    {
+        return $this->hasMany(TransferRequest::class, 'assigned_to');
+    }
+
+    public function assignedRepairs(): HasMany
+    {
+        return $this->hasMany(RepairRequest::class, 'assigned_to');
+    }
+
+    // Role checks
+    public function isAdmin(): bool
+    {
+        return $this->role === 'Admin';
+    }
+
+    public function isITManager(): bool
+    {
+        return in_array($this->role, ['Admin', 'IT Manager']);
+    }
+
+    public function isITSupport(): bool
+    {
+        return in_array($this->role, ['Admin', 'IT Manager', 'IT Support']);
+    }
+
+    public function isHROperations(): bool
+    {
+        return in_array($this->role, ['Admin', 'HR Operations']);
+    }
+
+    public function canManageAssets(): bool
+    {
+        return in_array($this->role, ['Admin', 'IT Manager', 'IT Support']);
+    }
+
+    public function canManageAllocations(): bool
+    {
+        return in_array($this->role, ['Admin', 'IT Manager', 'HR Operations']);
     }
 }
