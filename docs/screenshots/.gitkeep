@@ -1,0 +1,14 @@
+# Screenshots Directory
+
+This directory contains product screenshots for the README.
+
+Required screenshots:
+- login.png
+- dashboard.png
+- assets-list.png
+- asset-detail.png
+- clients-list.png
+- allocations-list.png
+- repairs-list.png
+
+See ../SCREENSHOT_GUIDE.md for instructions on how to capture these screenshots.
