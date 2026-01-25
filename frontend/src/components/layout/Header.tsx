@@ -1,5 +1,4 @@
-import React from 'react';
-import { Bell, Search } from 'lucide-react';
+import { Bell } from 'lucide-react';
 
 interface HeaderProps {
   title: string;

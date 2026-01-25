@@ -1,5 +1,5 @@
 import api from './api';
-import { ApiResponse, PaginatedResponse, RepairRequest } from '../types';
+import type { ApiResponse, PaginatedResponse, RepairRequest } from '../types';
 
 export interface RepairFilters {
   status?: string;

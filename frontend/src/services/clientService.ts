@@ -1,5 +1,5 @@
 import api from './api';
-import { ApiResponse, Client, Asset } from '../types';
+import type { ApiResponse, Client, Asset } from '../types';
 
 export interface CreateClientData {
   name: string;

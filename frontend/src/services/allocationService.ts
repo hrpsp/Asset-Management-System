@@ -1,5 +1,5 @@
 import api from './api';
-import { ApiResponse, PaginatedResponse, Allocation } from '../types';
+import type { ApiResponse, PaginatedResponse, Allocation } from '../types';
 
 export interface AllocationFilters {
   is_active?: boolean;

@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus, Search, ArrowRightLeft } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import Header from '../../components/layout/Header';
-import { Card, Button, Select, Badge, getStatusBadgeVariant, Table, Pagination } from '../../components/common';
+import { Card, Button, Select, Badge, Table, Pagination } from '../../components/common';
 import { allocationService, clientService } from '../../services';
-import { Allocation, Client } from '../../types';
+import type { Allocation, Client } from '../../types';
 import toast from 'react-hot-toast';
 
 export default function AllocationsList() {

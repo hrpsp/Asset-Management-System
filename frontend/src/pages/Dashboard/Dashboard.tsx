@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
   Laptop,
@@ -10,9 +10,9 @@ import {
   RotateCcw,
 } from 'lucide-react';
 import Header from '../../components/layout/Header';
-import { Card, CardHeader, StatsCard, Badge, getStatusBadgeVariant } from '../../components/common';
+import { Card, CardHeader, StatsCard, Badge } from '../../components/common';
 import { dashboardService } from '../../services';
-import { DashboardStats } from '../../types';
+import type { DashboardStats } from '../../types';
 
 export default function Dashboard() {
   const [stats, setStats] = useState<DashboardStats | null>(null);

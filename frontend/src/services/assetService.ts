@@ -1,5 +1,5 @@
 import api from './api';
-import { ApiResponse, PaginatedResponse, Asset } from '../types';
+import type { ApiResponse, PaginatedResponse, Asset } from '../types';
 
 export interface AssetFilters {
   status?: string;

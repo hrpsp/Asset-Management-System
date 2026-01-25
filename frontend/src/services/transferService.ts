@@ -1,5 +1,5 @@
 import api from './api';
-import { ApiResponse, PaginatedResponse, TransferRequest, TransferChecklist } from '../types';
+import type { ApiResponse, PaginatedResponse, TransferRequest, TransferChecklist } from '../types';
 
 export interface TransferFilters {
   status?: string;

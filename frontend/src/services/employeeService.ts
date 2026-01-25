@@ -1,5 +1,5 @@
 import api from './api';
-import { ApiResponse, PaginatedResponse, Employee, Allocation } from '../types';
+import type { ApiResponse, PaginatedResponse, Employee, Allocation } from '../types';
 
 export interface EmployeeFilters {
   client_id?: number;

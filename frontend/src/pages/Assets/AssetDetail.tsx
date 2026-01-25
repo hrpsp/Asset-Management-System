@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import {
   ArrowLeft,
   Edit,
   Trash2,
-  Laptop,
   Calendar,
   MapPin,
   Shield,
@@ -15,7 +14,7 @@ import {
 import Header from '../../components/layout/Header';
 import { Card, CardHeader, Button, Badge, getStatusBadgeVariant } from '../../components/common';
 import { assetService } from '../../services';
-import { Asset } from '../../types';
+import type { Asset } from '../../types';
 import toast from 'react-hot-toast';
 
 export default function AssetDetail() {

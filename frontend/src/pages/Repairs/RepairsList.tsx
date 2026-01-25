@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus, Wrench } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import Header from '../../components/layout/Header';
 import { Card, Button, Select, Badge, getStatusBadgeVariant, Table, Pagination } from '../../components/common';
 import { repairService } from '../../services';
-import { RepairRequest } from '../../types';
+import type { RepairRequest } from '../../types';
 import toast from 'react-hot-toast';
 
 const statusOptions = [

@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus, Search, Filter, Laptop, Tablet, Smartphone } from 'lucide-react';
+import { Plus, Search, Laptop, Tablet, Smartphone } from 'lucide-react';
 import Header from '../../components/layout/Header';
 import {
   Card,
   Button,
-  Input,
   Select,
   Table,
   Badge,
@@ -13,7 +12,7 @@ import {
   Pagination,
 } from '../../components/common';
 import { assetService, clientService } from '../../services';
-import { Asset, Client } from '../../types';
+import type { Asset, Client } from '../../types';
 import toast from 'react-hot-toast';
 
 const assetTypeOptions = [

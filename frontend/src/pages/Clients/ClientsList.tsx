@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Plus, Search, Building2, Users, Laptop } from 'lucide-react';
 import Header from '../../components/layout/Header';
 import { Card, Button, Badge, Table } from '../../components/common';
 import { clientService } from '../../services';
-import { Client } from '../../types';
+import type { Client } from '../../types';
 import toast from 'react-hot-toast';
 
 export default function ClientsList() {
