@@ -13,9 +13,16 @@ import Dashboard from './pages/Dashboard/Dashboard';
 // Assets
 import AssetsList from './pages/Assets/AssetsList';
 import AssetDetail from './pages/Assets/AssetDetail';
+import AssetForm from './pages/Assets/AssetForm';
 
 // Clients
 import ClientsList from './pages/Clients/ClientsList';
+import ClientDetail from './pages/Clients/ClientDetail';
+import ClientForm from './pages/Clients/ClientForm';
+
+// Employees
+import EmployeesList from './pages/Employees/EmployeesList';
+import EmployeeDetail from './pages/Employees/EmployeeDetail';
 
 // Allocations
 import AllocationsList from './pages/Allocations/AllocationsList';
@@ -47,19 +54,21 @@ function App() {
 
               {/* Assets */}
               <Route path="/assets" element={<AssetsList />} />
-              <Route path="/assets/new" element={<ComingSoon title="Create Asset" />} />
+              <Route path="/assets/new" element={<AssetForm />} />
               <Route path="/assets/:id" element={<AssetDetail />} />
-              <Route path="/assets/:id/edit" element={<ComingSoon title="Edit Asset" />} />
+              <Route path="/assets/:id/edit" element={<AssetForm />} />
 
               {/* Clients */}
               <Route path="/clients" element={<ClientsList />} />
-              <Route path="/clients/new" element={<ComingSoon title="Create Client" />} />
-              <Route path="/clients/:id" element={<ComingSoon title="Client Details" />} />
+              <Route path="/clients/new" element={<ClientForm />} />
+              <Route path="/clients/:id" element={<ClientDetail />} />
+              <Route path="/clients/:id/edit" element={<ClientForm />} />
 
               {/* Employees */}
-              <Route path="/employees" element={<ComingSoon title="Employees" />} />
+              <Route path="/employees" element={<EmployeesList />} />
               <Route path="/employees/new" element={<ComingSoon title="Create Employee" />} />
-              <Route path="/employees/:id" element={<ComingSoon title="Employee Details" />} />
+              <Route path="/employees/:id" element={<EmployeeDetail />} />
+              <Route path="/employees/:id/edit" element={<ComingSoon title="Edit Employee" />} />
 
               {/* Allocations */}
               <Route path="/allocations" element={<AllocationsList />} />
