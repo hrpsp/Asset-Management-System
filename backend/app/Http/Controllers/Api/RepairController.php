@@ -175,4 +175,85 @@ class RepairController extends Controller
 
         return $this->successResponse(RepairRequestResource::collection($repairs));
     }
+
+    public function update(Request $request, RepairRequest $repair)
+    {
+        $request->validate([
+            'issue_description' => 'sometimes|string',
+            'issue_category' => 'sometimes|in:Hardware Failure,Software Issue,Physical Damage,Performance Issue,Other',
+            'priority' => 'sometimes|in:Low,Medium,High,Critical',
+            'status' => 'sometimes|in:Reported,Diagnosed,Sent for Repair,Repaired,Closed,Cannot Repair',
+            'diagnosis_notes' => 'nullable|string',
+            'repair_vendor' => 'nullable|string',
+            'repair_description' => 'nullable|string',
+            'repair_cost' => 'nullable|numeric|min:0',
+            'resolution_notes' => 'nullable|string',
+            'assigned_to' => 'nullable|exists:users,id',
+            'is_warranty_claim' => 'nullable|boolean',
+            'warranty_claim_status' => 'nullable|in:N/A,Claimed,Approved,Rejected',
+        ]);
+
+        $oldValues = $repair->toArray();
+
+        $updateData = $request->only([
+            'issue_description', 'issue_category', 'priority', 'status',
+            'diagnosis_notes', 'repair_vendor', 'repair_description',
+            'repair_cost', 'resolution_notes', 'assigned_to',
+            'is_warranty_claim', 'warranty_claim_status'
+        ]);
+
+        // Set dates based on status
+        if ($request->has('status')) {
+            if ($request->status === 'Sent for Repair' && !$repair->sent_date) {
+                $updateData['sent_date'] = now();
+            }
+
+            if ($request->status === 'Repaired' && !$repair->received_date) {
+                $updateData['received_date'] = now();
+            }
+
+            if (in_array($request->status, ['Closed', 'Cannot Repair'])) {
+                $updateData['closed_date'] = now();
+
+                // Update asset status back
+                if ($request->status === 'Closed') {
+                    $repair->asset->update(['status' => $repair->allocation ? 'Assigned' : 'Available']);
+                } elseif ($request->status === 'Cannot Repair') {
+                    $repair->asset->update(['status' => 'Retired']);
+                }
+            }
+        }
+
+        $repair->update($updateData);
+
+        ActivityLog::log('updated', 'RepairRequest', $repair->id, $oldValues, $repair->toArray());
+
+        return $this->successResponse(
+            new RepairRequestResource($repair->load('asset', 'allocation.employee')),
+            'Repair request updated successfully'
+        );
+    }
+
+    public function destroy(RepairRequest $repair)
+    {
+        if (in_array($repair->status, ['Sent for Repair', 'Repaired'])) {
+            return $this->errorResponse('Cannot delete repair request in current status. Please close it first.', 400);
+        }
+
+        try {
+            // Update asset status back if needed
+            if ($repair->asset->status === 'In Repair') {
+                $repair->asset->update(['status' => $repair->allocation ? 'Assigned' : 'Available']);
+            }
+
+            ActivityLog::log('deleted', 'RepairRequest', $repair->id, $repair->toArray(), null);
+
+            $repair->delete();
+
+            return $this->successResponse(null, 'Repair request deleted successfully');
+
+        } catch (\Exception $e) {
+            return $this->errorResponse('Failed to delete repair request: ' . $e->getMessage(), 500);
+        }
+    }
 }

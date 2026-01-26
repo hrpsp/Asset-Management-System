@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\RentalController;
 use App\Http\Controllers\Api\TransferController;
 use App\Http\Controllers\Api\RepairController;
 use App\Http\Controllers\Api\DashboardController;
+use App\Http\Controllers\Api\ReportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -83,6 +84,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/', [AllocationController::class, 'index']);
         Route::post('/', [AllocationController::class, 'store']);
         Route::get('/{allocation}', [AllocationController::class, 'show']);
+        Route::put('/{allocation}', [AllocationController::class, 'update']);
+        Route::delete('/{allocation}', [AllocationController::class, 'destroy']);
         Route::post('/{allocation}/return', [AllocationController::class, 'processReturn']);
         Route::post('/{allocation}/photos', [AllocationController::class, 'uploadPhotos']);
     });
@@ -109,6 +112,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/', [TransferController::class, 'store']);
         Route::get('/pending', [TransferController::class, 'pending']);
         Route::get('/{transfer}', [TransferController::class, 'show']);
+        Route::put('/{transfer}', [TransferController::class, 'update']);
+        Route::delete('/{transfer}', [TransferController::class, 'destroy']);
         Route::patch('/{transfer}/status', [TransferController::class, 'updateStatus']);
         Route::patch('/{transfer}/checklist', [TransferController::class, 'updateChecklist']);
     });
@@ -119,8 +124,20 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/', [RepairController::class, 'store']);
         Route::get('/queue', [RepairController::class, 'queue']);
         Route::get('/{repair}', [RepairController::class, 'show']);
+        Route::put('/{repair}', [RepairController::class, 'update']);
+        Route::delete('/{repair}', [RepairController::class, 'destroy']);
         Route::patch('/{repair}/status', [RepairController::class, 'updateStatus']);
         Route::post('/{repair}/spare', [RepairController::class, 'issueSpare']);
+    });
+
+    // Reports
+    Route::prefix('reports')->group(function () {
+        Route::get('/asset-utilization', [ReportController::class, 'assetUtilization']);
+        Route::get('/client-summary', [ReportController::class, 'clientSummary']);
+        Route::get('/repair-analysis', [ReportController::class, 'repairAnalysis']);
+        Route::get('/employee-asset-history', [ReportController::class, 'employeeAssetHistory']);
+        Route::get('/installment-rental', [ReportController::class, 'installmentRental']);
+        Route::get('/warranty-expiry', [ReportController::class, 'warrantyExpiry']);
     });
 
 });

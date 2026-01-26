@@ -226,6 +226,63 @@ class AllocationController extends Controller
         }
     }
 
+    public function update(Request $request, Allocation $allocation)
+    {
+        $request->validate([
+            'handover_condition' => 'sometimes|in:Excellent,Good,Fair,Poor',
+            'handover_notes' => 'nullable|string',
+            'allocation_date' => 'sometimes|date',
+        ]);
+
+        DB::beginTransaction();
+
+        try {
+            $oldValues = $allocation->toArray();
+
+            $allocation->update($request->only([
+                'handover_condition',
+                'handover_notes',
+                'allocation_date',
+            ]));
+
+            DB::commit();
+
+            ActivityLog::log('updated', 'Allocation', $allocation->id, $oldValues, $allocation->toArray());
+
+            $allocation->load(['asset', 'employee', 'client', 'installmentPlan', 'rentalAgreement']);
+
+            return $this->successResponse(
+                new AllocationResource($allocation),
+                'Allocation updated successfully'
+            );
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return $this->errorResponse('Failed to update allocation: ' . $e->getMessage(), 500);
+        }
+    }
+
+    public function destroy(Allocation $allocation)
+    {
+        if ($allocation->is_active) {
+            return $this->errorResponse('Cannot delete an active allocation. Please process return first.', 400);
+        }
+
+        try {
+            ActivityLog::log('deleted', 'Allocation', $allocation->id, $allocation->toArray(), null);
+
+            // Delete related photos
+            AllocationPhoto::where('allocation_id', $allocation->id)->delete();
+
+            $allocation->delete();
+
+            return $this->successResponse(null, 'Allocation deleted successfully');
+
+        } catch (\Exception $e) {
+            return $this->errorResponse('Failed to delete allocation: ' . $e->getMessage(), 500);
+        }
+    }
+
     public function uploadPhotos(Request $request, Allocation $allocation)
     {
         $request->validate([

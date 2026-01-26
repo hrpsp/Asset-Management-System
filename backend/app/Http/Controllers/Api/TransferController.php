@@ -139,4 +139,55 @@ class TransferController extends Controller
 
         return $this->successResponse(TransferRequestResource::collection($transfers));
     }
+
+    public function update(Request $request, TransferRequest $transfer)
+    {
+        $request->validate([
+            'transfer_type' => 'sometimes|in:Client Transfer,Employee Transfer,Department Transfer,Location Transfer,Return to Pool',
+            'trigger_reason' => 'sometimes|in:Employee Change,Project End,Asset Upgrade,Client Request,Relocation,Other',
+            'reason_details' => 'nullable|string',
+            'deadline_date' => 'nullable|date',
+            'assigned_to' => 'nullable|exists:users,id',
+            'status' => 'sometimes|in:Pending,In Progress,Completed,Escalated,Cancelled',
+            'notes' => 'nullable|string',
+        ]);
+
+        $oldValues = $transfer->toArray();
+
+        $updateData = $request->only([
+            'transfer_type', 'trigger_reason', 'reason_details',
+            'deadline_date', 'assigned_to', 'status', 'notes'
+        ]);
+
+        if ($request->has('status') && $request->status === 'Completed') {
+            $updateData['completion_date'] = now();
+        }
+
+        $transfer->update($updateData);
+
+        ActivityLog::log('updated', 'TransferRequest', $transfer->id, $oldValues, $transfer->toArray());
+
+        return $this->successResponse(
+            new TransferRequestResource($transfer->load('allocation.asset', 'allocation.employee')),
+            'Transfer request updated successfully'
+        );
+    }
+
+    public function destroy(TransferRequest $transfer)
+    {
+        if (in_array($transfer->status, ['In Progress', 'Completed'])) {
+            return $this->errorResponse('Cannot delete transfer request in current status', 400);
+        }
+
+        try {
+            ActivityLog::log('deleted', 'TransferRequest', $transfer->id, $transfer->toArray(), null);
+
+            $transfer->delete();
+
+            return $this->successResponse(null, 'Transfer request deleted successfully');
+
+        } catch (\Exception $e) {
+            return $this->errorResponse('Failed to delete transfer request: ' . $e->getMessage(), 500);
+        }
+    }
 }
