@@ -23,12 +23,25 @@ import ClientForm from './pages/Clients/ClientForm';
 // Employees
 import EmployeesList from './pages/Employees/EmployeesList';
 import EmployeeDetail from './pages/Employees/EmployeeDetail';
+import EmployeeForm from './pages/Employees/EmployeeForm';
 
 // Allocations
 import AllocationsList from './pages/Allocations/AllocationsList';
+import AllocationDetail from './pages/Allocations/AllocationDetail';
+import AllocationForm from './pages/Allocations/AllocationForm';
 
 // Repairs
 import RepairsList from './pages/Repairs/RepairsList';
+import RepairDetail from './pages/Repairs/RepairDetail';
+import RepairForm from './pages/Repairs/RepairForm';
+
+// Transfers
+import TransfersList from './pages/Transfers/TransfersList';
+import TransferDetail from './pages/Transfers/TransferDetail';
+import TransferForm from './pages/Transfers/TransferForm';
+
+// Reports
+import Reports from './pages/Reports/Reports';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -66,27 +79,30 @@ function App() {
 
               {/* Employees */}
               <Route path="/employees" element={<EmployeesList />} />
-              <Route path="/employees/new" element={<ComingSoon title="Create Employee" />} />
+              <Route path="/employees/new" element={<EmployeeForm />} />
               <Route path="/employees/:id" element={<EmployeeDetail />} />
-              <Route path="/employees/:id/edit" element={<ComingSoon title="Edit Employee" />} />
+              <Route path="/employees/:id/edit" element={<EmployeeForm />} />
 
               {/* Allocations */}
               <Route path="/allocations" element={<AllocationsList />} />
-              <Route path="/allocations/new" element={<ComingSoon title="New Allocation" />} />
-              <Route path="/allocations/:id" element={<ComingSoon title="Allocation Details" />} />
+              <Route path="/allocations/new" element={<AllocationForm />} />
+              <Route path="/allocations/:id" element={<AllocationDetail />} />
+              <Route path="/allocations/:id/edit" element={<AllocationForm />} />
 
               {/* Repairs */}
               <Route path="/repairs" element={<RepairsList />} />
-              <Route path="/repairs/new" element={<ComingSoon title="New Repair Request" />} />
-              <Route path="/repairs/:id" element={<ComingSoon title="Repair Details" />} />
+              <Route path="/repairs/new" element={<RepairForm />} />
+              <Route path="/repairs/:id" element={<RepairDetail />} />
+              <Route path="/repairs/:id/edit" element={<RepairForm />} />
 
               {/* Transfers */}
-              <Route path="/transfers" element={<ComingSoon title="Transfers" />} />
-              <Route path="/transfers/new" element={<ComingSoon title="New Transfer" />} />
-              <Route path="/transfers/:id" element={<ComingSoon title="Transfer Details" />} />
+              <Route path="/transfers" element={<TransfersList />} />
+              <Route path="/transfers/new" element={<TransferForm />} />
+              <Route path="/transfers/:id" element={<TransferDetail />} />
+              <Route path="/transfers/:id/edit" element={<TransferForm />} />
 
               {/* Reports */}
-              <Route path="/reports" element={<ComingSoon title="Reports" />} />
+              <Route path="/reports" element={<Reports />} />
             </Route>
           </Routes>
         </BrowserRouter>
